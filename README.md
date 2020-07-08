@@ -1,3 +1,5 @@
+# Clone from [react-native-snap-carousel](https://github.com/archriss/react-native-snap-carousel) and modify
+
 # react-native-snap-carousel
 
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=flat-square&colorB=191A17)
