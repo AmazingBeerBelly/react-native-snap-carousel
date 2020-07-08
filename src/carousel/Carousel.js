@@ -315,6 +315,7 @@ export default class Carousel extends Component {
         }
         argMapping.push(...props.onScroll._argMapping);
       }
+      console.log('argMapping: ', argMapping)
       this._onScrollHandler = Animated.event(
         argMapping,
         scrollEventConfig
@@ -481,12 +482,6 @@ export default class Carousel extends Component {
     }
 
     _getWrappedRef () {
-        if (this._carouselRef && (
-            (this._needsScrollView() && this._carouselRef.scrollTo) ||
-            (!this._needsScrollView() && this._carouselRef.scrollToOffset)
-        )) {
-            return this._carouselRef;
-        }
         // https://github.com/facebook/react-native/issues/10635
         // https://stackoverflow.com/a/48786374/8412141
         return this._carouselRef && this._carouselRef.getNode && this._carouselRef.getNode();
@@ -587,8 +582,10 @@ export default class Carousel extends Component {
             let animatedValue;
 
             this._positions[index] = {
-                start: index * sizeRef,
-                end: index * sizeRef + sizeRef
+                start: index ? index * sizeRef - sizeRef * 0.5 : 0,
+                end: index ? index * sizeRef + sizeRef / 2 : sizeRef / 2
+                // start: index * sizeRef,
+                // end: index * sizeRef + sizeRef,
             };
 
             if (!this._shouldAnimateSlides(props)) {
@@ -618,6 +615,8 @@ export default class Carousel extends Component {
 
             interpolators.push(animatedValue);
         });
+
+        console.log('interpolators: ', interpolators)
 
         this.setState({ interpolators });
     }
@@ -1035,6 +1034,7 @@ export default class Carousel extends Component {
         }
 
         this._itemToSnapTo = index;
+        console.log('this._positions: ', this._positions)
         this._scrollOffsetRef = this._positions[index] && this._positions[index].start;
         this._onScrollTriggered = false;
 
@@ -1228,7 +1228,7 @@ export default class Carousel extends Component {
             itemHeight
         } : undefined;
 
-        const mainDimension = vertical ? { height: itemHeight } : { width: itemWidth };
+        const mainDimension = vertical ? { height: itemHeight } : { width: index ? itemWidth : itemWidth / 2 + (sliderWidth - itemWidth) / 2  };
         const specificProps = this._needsScrollView() ? {
             key: keyExtractor ? keyExtractor(item, index) : this._getKeyExtractor(item, index)
         } : {};
@@ -1308,7 +1308,8 @@ export default class Carousel extends Component {
                 paddingTop: this._getContainerInnerMargin(),
                 paddingBottom: this._getContainerInnerMargin(true)
             } : {
-                paddingLeft: this._getContainerInnerMargin(),
+                // paddingLeft: this._getContainerInnerMargin(),
+                paddingLeft: 0,
                 paddingRight: this._getContainerInnerMargin(true)
             },
             contentContainerCustomStyle || {}
@@ -1353,6 +1354,8 @@ export default class Carousel extends Component {
             ...this.props,
             ...this._getComponentStaticProps()
         };
+
+        console.log('props: ', props)
 
         const ScrollViewComponent = typeof useScrollView === 'function' ? useScrollView : AnimatedScrollView
 

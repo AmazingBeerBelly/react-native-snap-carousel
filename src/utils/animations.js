@@ -15,10 +15,17 @@ const IS_ANDROID = Platform.OS === 'android';
 export function getInputRangeFromIndexes (range, index, carouselProps) {
     const sizeRef = carouselProps.vertical ? carouselProps.itemHeight : carouselProps.itemWidth;
     let inputRange = [];
-
-    for (let i = 0; i < range.length; i++) {
-        inputRange.push((index - range[i]) * sizeRef);
+    const itemWidth = sizeRef / 2;
+    if (!index) {
+        for (let i = 0; i < range.length; i++) {
+            inputRange.push((index - range[i]) * itemWidth);
+        }    
+    } else {
+        for (let i = 0; i < range.length; i++) {
+            inputRange.push((index - range[i]) * sizeRef - itemWidth);
+        }
     }
+    console.log('inputRange: ', inputRange)
 
     return inputRange;
 }
